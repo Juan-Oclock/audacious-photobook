@@ -48,7 +48,7 @@ export default function LayoutRenderer({
   if (node.rows) {
     return (
       <div
-        className="flex flex-col gap-1"
+        className="flex flex-col gap-1 h-full"
         style={{
           flexGrow: node.heightRatio || node.widthRatio || 1,
         }}
@@ -56,7 +56,7 @@ export default function LayoutRenderer({
         {node.rows.map((row, index) => (
           <div
             key={index}
-            className="flex-shrink-0"
+            className="flex-shrink-0 min-h-0"
             style={{
               flexGrow: row.heightRatio || 1,
               display: "flex",
@@ -79,7 +79,7 @@ export default function LayoutRenderer({
   if (node.columns) {
     return (
       <div
-        className="flex flex-row gap-1"
+        className="flex flex-row gap-1 h-full"
         style={{
           flexGrow: node.heightRatio || node.widthRatio || 1,
         }}
@@ -87,7 +87,7 @@ export default function LayoutRenderer({
         {node.columns.map((col, index) => (
           <div
             key={index}
-            className="flex-shrink-0"
+            className="flex-shrink-0 min-w-0"
             style={{
               flexGrow: col.widthRatio || 1,
               display: "flex",
