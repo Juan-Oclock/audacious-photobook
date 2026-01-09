@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import type { Image, ImagesBySlot } from "@/types";
+import type { Image, ImagesBySlot, Orientation, PhotobookDimensions, CoverType } from "@/types";
+import { DEFAULT_PRESET_ID, DEFAULT_ORIENTATION } from "./dimension-presets";
 
 interface EditorContextType {
   // Current page state
@@ -15,6 +16,15 @@ interface EditorContextType {
   // Images placed in slots (keyed by slotId)
   imagesBySlot: ImagesBySlot;
   handleDrop: (targetSlotId: string, image: Image, sourceSlotId?: string) => void;
+
+  // Photobook dimensions
+  dimensions: PhotobookDimensions;
+  setOrientation: (orientation: Orientation) => void;
+  setPresetId: (presetId: string) => void;
+
+  // Cover type
+  coverType: CoverType;
+  setCoverType: (coverType: CoverType) => void;
 
   // Reset state (useful for testing or starting over)
   resetState: () => void;
@@ -31,6 +41,27 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 
   // Images placed in slots (keyed by slotId)
   const [imagesBySlot, setImagesBySlot] = useState<ImagesBySlot>({});
+
+  // Photobook dimensions
+  const [dimensions, setDimensions] = useState<PhotobookDimensions>({
+    presetId: DEFAULT_PRESET_ID,
+    orientation: DEFAULT_ORIENTATION,
+  });
+
+  const setOrientation = useCallback((orientation: Orientation) => {
+    setDimensions((prev) => ({ ...prev, orientation }));
+  }, []);
+
+  const setPresetId = useCallback((presetId: string) => {
+    setDimensions((prev) => ({ ...prev, presetId }));
+  }, []);
+
+  // Cover type
+  const [coverType, setCoverTypeState] = useState<CoverType>("imagewrap");
+
+  const setCoverType = useCallback((type: CoverType) => {
+    setCoverTypeState(type);
+  }, []);
 
   // Handle new image uploads
   const addUploadedImages = useCallback((newImages: Image[]) => {
@@ -62,6 +93,11 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     setCurrentPage(1);
     setUploadedImages([]);
     setImagesBySlot({});
+    setDimensions({
+      presetId: DEFAULT_PRESET_ID,
+      orientation: DEFAULT_ORIENTATION,
+    });
+    setCoverTypeState("imagewrap");
   }, []);
 
   return (
@@ -73,6 +109,11 @@ export function EditorProvider({ children }: { children: ReactNode }) {
         addUploadedImages,
         imagesBySlot,
         handleDrop,
+        dimensions,
+        setOrientation,
+        setPresetId,
+        coverType,
+        setCoverType,
         resetState,
       }}
     >

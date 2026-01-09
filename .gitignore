@@ -50,3 +50,16 @@ features.db
 # Specification files
 app_spec.txt
 prompts/
+
+# Playwright MCP screenshots
+.playwright-mcp/
+
+# Test utility scripts
+create-*.js
+
+# Test files in public
+public/test-*.txt
+public/large-image-test.jpg
+public/wide-test-image.png
+public/this-is-a-very-long-filename-*.png
+public/photo\ (1)\ copy\ -\ final_v2\ \[edited\].png

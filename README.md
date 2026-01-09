@@ -1,24 +1,15 @@
-# Audrey Photobook Editor
+# Audacious Photobook
 
-A simplified photobook web editor MVP where users can choose a photobook album, configure basic options, and upload photos into a fixed-layout editor.
-
-## Overview
-
-This is a **slot-based** photobook editor, NOT a design tool:
-- Layouts are predefined and immutable
-- Users drag and drop images into slots
-- No text editing, layout editing, or image effects
+A modern, slot-based photobook editor built with Next.js 14+, TypeScript, and Tailwind CSS. Users can select album layouts, customize dimensions and cover types, then drag and drop images into predefined slots.
 
 ## Features
 
-- **Landing Page**: Hero section with call-to-action
-- **Album Selection**: Choose from 3 albums (only Album 1 active for MVP)
-- **Album Detail**: View album info and start editing
-- **Photobook Editor**:
-  - Upload tray sidebar for image uploads
-  - 8 pages with predefined layouts (72 total slots)
-  - Drag and drop images between tray and slots
-  - Page navigation with state persistence
+- **Slot-Based Editor**: Drag and drop images into professionally designed layout slots
+- **Multiple Orientations**: Choose between Square, Landscape, or Portrait formats
+- **Customizable Sizes**: Various size options from 8"x6" to 17.5"x12"
+- **Cover Types**: Softcover, Imagewrap Hardcover, Debossed Hardcover, and Deluxe Hardcover
+- **8 Page Layouts**: 72 image slots across 8 uniquely designed pages
+- **Session Persistence**: Your work persists during your editing session
 
 ## Tech Stack
 
@@ -26,132 +17,95 @@ This is a **slot-based** photobook editor, NOT a design tool:
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui
-- **Deployment**: Vercel
+- **State Management**: React Context API
 
-## Prerequisites
+## Getting Started
+
+### Prerequisites
 
 - Node.js 18+
-- npm or pnpm
+- npm or yarn
 
-## Quick Start
-
-```bash
-# Make init.sh executable (first time only)
-chmod +x init.sh
-
-# Run the setup and development server
-./init.sh
-```
-
-Or manually:
+### Installation
 
 ```bash
+# Clone the repository
+git clone git@github.com:Juan-Oclock/audacious-photobook.git
+cd audacious-photobook
+
 # Install dependencies
 npm install
 
-# Start development server
+# Start the development server
 npm run dev
 ```
 
-The app will be available at [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## Available Scripts
+
+```bash
+npm run dev      # Development server with hot reload
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+## Project Structure
+
+```
+├── app/                       # Next.js App Router pages
+│   ├── page.tsx              # Landing page with hero
+│   └── photobooks/
+│       ├── page.tsx          # Album selection
+│       ├── [albumId]/        # Album detail & configuration
+│       └── editor/           # Main photobook editor
+├── components/
+│   ├── ui/                   # shadcn/ui components
+│   ├── DimensionSelector.tsx # Size & orientation picker
+│   ├── CoverTypeSelector.tsx # Cover type picker
+│   ├── LayoutRenderer.tsx    # Recursive layout renderer
+│   ├── ImageSlot.tsx         # Droppable image slot
+│   ├── UploadTray.tsx        # Image upload sidebar
+│   └── PageNavigator.tsx     # Page navigation
+├── album-layouts/            # Layout definitions (immutable)
+├── lib/
+│   ├── EditorContext.tsx     # Global state management
+│   └── dimension-presets.ts  # Size presets & helpers
+└── types/                    # TypeScript type definitions
+```
 
 ## Routes
 
 | Route | Description |
 |-------|-------------|
-| `/` | Landing page with hero and CTA |
-| `/photobooks` | Album selection (3 albums) |
-| `/photobooks/[albumId]` | Album detail page |
+| `/` | Landing page with hero image |
+| `/photobooks` | Album selection gallery |
+| `/photobooks/[albumId]` | Album detail & configuration |
 | `/photobooks/editor` | Photobook editor |
 
-## Project Structure
+## How It Works
 
-```
-audrey-photobook/
-├── app/                      # Next.js App Router pages
-│   ├── page.tsx              # Landing page
-│   ├── photobooks/
-│   │   ├── page.tsx          # Album selection
-│   │   ├── [albumId]/
-│   │   │   └── page.tsx      # Album detail
-│   │   └── editor/
-│   │       └── page.tsx      # Editor page
-├── components/               # React components
-│   ├── ui/                   # shadcn/ui components
-│   ├── LayoutRenderer.tsx    # Recursive layout renderer
-│   ├── ImageSlot.tsx         # Individual image slot
-│   ├── UploadTray.tsx        # Upload sidebar
-│   └── PageNavigator.tsx     # Page navigation
-├── album-layouts/            # Layout definitions
-│   └── Album1_Layout_Registry.ts
-├── lib/                      # Utilities
-└── types/                    # TypeScript types
-```
-
-## Layout Registry
-
-Album 1 has 8 pages with the following slot counts:
-- Page 1: 7 slots
-- Page 2: 8 slots
-- Page 3: 16 slots
-- Page 4: 11 slots
-- Page 5: 8 slots
-- Page 6: 10 slots
-- Page 7: 3 slots
-- Page 8: 9 slots
-- **Total: 72 image slots**
-
-Layouts are defined in `album-layouts/Album1_Layout_Registry.ts` and are **immutable**.
+1. **Browse Albums**: View available photobook templates
+2. **Configure Options**: Select orientation (Square/Landscape/Portrait), size, and cover type
+3. **Upload Photos**: Drag images into the upload tray
+4. **Place Images**: Drag photos from the tray into layout slots
+5. **Navigate Pages**: Use the page navigator to edit all 8 pages
 
 ## Drag and Drop Behavior
 
 - **Tray to Slot**: Copies image (original stays in tray)
 - **Slot to Empty Slot**: Moves image (source cleared)
 - **Slot to Occupied Slot**: Replaces target, clears source
-- **No swapping**: Images are replaced, not swapped
 
-## MVP Scope
+## Layout Registry
 
-### Included
-- Album 1 full functionality
-- All 8 pages with layouts
-- Drag and drop editing
-- Client-side state management
+Album 1 has 8 pages with 72 total slots:
+- Page 1: 7 slots | Page 2: 8 slots | Page 3: 16 slots | Page 4: 11 slots
+- Page 5: 8 slots | Page 6: 10 slots | Page 7: 3 slots | Page 8: 9 slots
 
-### Explicitly Out of Scope
-- Payments/checkout
-- Authentication
-- Backend persistence
-- Text editing
-- Layout customization
-- Image effects (filters, cropping)
-- Album 2 and 3 (Coming Soon placeholder)
-
-## Development
-
-```bash
-# Development server with hot reload
-npm run dev
-
-# Type checking
-npm run type-check
-
-# Build for production
-npm run build
-
-# Start production server
-npm run start
-```
-
-## Deployment
-
-The project is configured for Vercel deployment:
-
-```bash
-# Deploy to Vercel
-vercel
-```
+Layouts are defined in `album-layouts/Album1_Layout_Registry.ts` and are **immutable**.
 
 ## License
 
-Private - Audrey Photobook
+MIT

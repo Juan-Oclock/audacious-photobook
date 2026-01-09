@@ -31,3 +31,24 @@ export interface Album {
 
 // Editor state type
 export type ImagesBySlot = Record<string, Image | null>;
+
+// Photobook orientation options
+export type Orientation = "square" | "landscape" | "portrait";
+
+// Size preset definition
+export interface SizePreset {
+  id: string;
+  widthInches: number;
+  heightInches: number;
+  label: string;
+  labelCm: string;
+}
+
+// Combined dimension selection
+export interface PhotobookDimensions {
+  presetId: string;
+  orientation: Orientation;
+}
+
+// Cover type options
+export type CoverType = "softcover" | "imagewrap" | "debossed" | "deluxe";

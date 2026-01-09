@@ -7,6 +7,7 @@ import PageNavigator from "@/components/PageNavigator";
 import LayoutRenderer from "@/components/LayoutRenderer";
 import { getPageLayout } from "@/album-layouts/Album1_Layout_Registry";
 import { useEditor } from "@/lib/EditorContext";
+import { getPresetById, calculateAspectRatio } from "@/lib/dimension-presets";
 import type { Image } from "@/types";
 
 export default function EditorPage() {
@@ -18,7 +19,14 @@ export default function EditorPage() {
     addUploadedImages,
     imagesBySlot,
     handleDrop,
+    dimensions,
   } = useEditor();
+
+  // Calculate aspect ratio from selected dimensions
+  const preset = getPresetById(dimensions.presetId);
+  const aspectRatio = preset
+    ? calculateAspectRatio(preset, dimensions.orientation)
+    : "16 / 9";
 
   // Get the current page layout
   const currentLayout = getPageLayout(currentPage);
@@ -80,8 +88,8 @@ export default function EditorPage() {
             <div
               className="bg-white shadow-xl rounded-lg overflow-hidden"
               style={{
-                width: "min(100%, 800px)",
-                aspectRatio: "1 / 1",
+                width: "min(100%, 960px)",
+                aspectRatio,
               }}
             >
               <div className="w-full h-full p-2">

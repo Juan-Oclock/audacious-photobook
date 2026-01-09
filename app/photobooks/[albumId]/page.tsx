@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
 import { notFound } from "next/navigation";
+import { DimensionSelector } from "@/components/DimensionSelector";
+import { CoverTypeSelector } from "@/components/CoverTypeSelector";
 
 interface AlbumData {
   id: string;
@@ -46,8 +51,8 @@ interface PageProps {
   params: Promise<{ albumId: string }>;
 }
 
-export default async function AlbumDetailPage({ params }: PageProps) {
-  const { albumId } = await params;
+export default function AlbumDetailPage({ params }: PageProps) {
+  const { albumId } = use(params);
   const album = albumsData[albumId];
 
   if (!album) {
@@ -111,44 +116,61 @@ export default async function AlbumDetailPage({ params }: PageProps) {
                 </div>
               </div>
             )}
+
+            {/* Album title and description */}
+            <div className="p-6 border-t border-slate-100">
+              <h1 className="text-3xl font-bold text-slate-900 mb-4">{album.name}</h1>
+              <p className="text-lg text-slate-600 mb-6">{album.longDescription}</p>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                  <div className="text-2xl font-bold text-teal-600">{album.pages}</div>
+                  <div className="text-sm text-slate-500">Pages</div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                  <div className="text-2xl font-bold text-teal-600">{album.slots}</div>
+                  <div className="text-sm text-slate-500">Photo Slots</div>
+                </div>
+              </div>
+
+              {/* Features */}
+              {album.isActive && (
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-3">What&apos;s Included</h3>
+                  <ul className="space-y-2">
+                    {[
+                      "8 professionally designed page layouts",
+                      "72 image slots with various sizes",
+                      "Drag and drop photo placement",
+                      "Instant preview of your photobook",
+                    ].map((feature, i) => (
+                      <li key={i} className="flex items-center gap-2 text-slate-600">
+                        <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Album info */}
+          {/* Album config */}
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-4">{album.name}</h1>
-            <p className="text-lg text-slate-600 mb-6">{album.longDescription}</p>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-white rounded-xl p-4 border border-slate-200">
-                <div className="text-2xl font-bold text-teal-600">{album.pages}</div>
-                <div className="text-sm text-slate-500">Pages</div>
+            {/* Dimension Selector */}
+            {album.isActive && (
+              <div className="mb-6">
+                <DimensionSelector />
               </div>
-              <div className="bg-white rounded-xl p-4 border border-slate-200">
-                <div className="text-2xl font-bold text-teal-600">{album.slots}</div>
-                <div className="text-sm text-slate-500">Photo Slots</div>
-              </div>
-            </div>
+            )}
 
-            {/* Features */}
+            {/* Cover Type Selector */}
             {album.isActive && (
               <div className="mb-8">
-                <h3 className="font-semibold text-slate-900 mb-3">What&apos;s Included</h3>
-                <ul className="space-y-2">
-                  {[
-                    "8 professionally designed page layouts",
-                    "72 image slots with various sizes",
-                    "Drag and drop photo placement",
-                    "Instant preview of your photobook",
-                  ].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 text-slate-600">
-                      <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                <CoverTypeSelector />
               </div>
             )}
 
