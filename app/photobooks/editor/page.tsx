@@ -3,9 +3,9 @@
 import { useCallback } from "react";
 import Link from "next/link";
 import UploadTray from "@/components/UploadTray";
-import PageNavigator from "@/components/PageNavigator";
-import LayoutRenderer from "@/components/LayoutRenderer";
-import { getPageLayout } from "@/album-layouts/Album1_Layout_Registry";
+import SpreadNavigator from "@/components/SpreadNavigator";
+import SpreadRenderer from "@/components/SpreadRenderer";
+import { getSpreadConfig } from "@/lib/spread-config";
 import { useEditor } from "@/lib/EditorContext";
 import { getPresetById, calculateAspectRatio } from "@/lib/dimension-presets";
 import type { Image } from "@/types";
@@ -13,8 +13,8 @@ import type { Image } from "@/types";
 export default function EditorPage() {
   // Get state from context (persists during session)
   const {
-    currentPage,
-    setCurrentPage,
+    currentSpread,
+    setCurrentSpread,
     uploadedImages,
     addUploadedImages,
     imagesBySlot,
@@ -28,8 +28,8 @@ export default function EditorPage() {
     ? calculateAspectRatio(preset, dimensions.orientation)
     : "16 / 9";
 
-  // Get the current page layout
-  const currentLayout = getPageLayout(currentPage);
+  // Get the current spread configuration
+  const currentSpreadConfig = getSpreadConfig(currentSpread);
 
   // Handle new image uploads
   const handleUpload = useCallback((newImages: Image[]) => {
@@ -42,15 +42,15 @@ export default function EditorPage() {
     // but this can be extended for visual feedback
   }, []);
 
-  // Handle page change
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-  }, [setCurrentPage]);
+  // Handle spread change
+  const handleSpreadChange = useCallback((spread: number) => {
+    setCurrentSpread(spread);
+  }, [setCurrentSpread]);
 
-  if (!currentLayout) {
+  if (!currentSpreadConfig) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-500">Layout not found for page {currentPage}</p>
+        <p className="text-slate-500">Spread not found</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function EditorPage() {
           <h1 className="font-semibold text-slate-900">Album 1 Editor</h1>
         </div>
         <div className="text-sm text-slate-500">
-          Page {currentPage} of 8
+          {currentSpreadConfig.label}
         </div>
       </header>
 
@@ -81,32 +81,23 @@ export default function EditorPage() {
           <UploadTray images={uploadedImages} onUpload={handleUpload} />
         </aside>
 
-        {/* Page canvas */}
+        {/* Spread canvas */}
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Canvas area */}
-          <div className="flex-1 flex items-center justify-center p-8 overflow-auto">
-            <div
-              className="bg-white shadow-xl rounded-lg overflow-hidden"
-              style={{
-                width: "min(100%, 960px)",
-                aspectRatio,
-              }}
-            >
-              <div className="w-full h-full p-2">
-                <LayoutRenderer
-                  node={currentLayout}
-                  imagesBySlot={imagesBySlot}
-                  onDrop={handleDrop}
-                  onDragStart={handleDragStart}
-                />
-              </div>
-            </div>
+          <div className="flex-1 flex items-center justify-center p-4 overflow-auto">
+            <SpreadRenderer
+              spread={currentSpreadConfig}
+              imagesBySlot={imagesBySlot}
+              onDrop={handleDrop}
+              onDragStart={handleDragStart}
+              aspectRatio={aspectRatio}
+            />
           </div>
 
-          {/* Page navigation */}
-          <PageNavigator
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
+          {/* Spread navigation */}
+          <SpreadNavigator
+            currentSpread={currentSpread}
+            onSpreadChange={handleSpreadChange}
           />
         </main>
       </div>

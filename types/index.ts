@@ -52,3 +52,19 @@ export interface PhotobookDimensions {
 
 // Cover type options
 export type CoverType = "softcover" | "imagewrap" | "debossed" | "deluxe";
+
+// Spread navigation types
+export type SpreadPosition = 0 | 1 | 2 | 3 | 4 | 5;
+
+export interface SpreadPageConfig {
+  type: 'cover' | 'content' | 'endpaper';
+  pageNumber?: number;
+  coverSide?: 'back' | 'front';
+}
+
+export interface SpreadConfig {
+  position: SpreadPosition;
+  label: string;
+  left: SpreadPageConfig;
+  right: SpreadPageConfig;
+}

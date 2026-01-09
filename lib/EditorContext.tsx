@@ -5,9 +5,9 @@ import type { Image, ImagesBySlot, Orientation, PhotobookDimensions, CoverType }
 import { DEFAULT_PRESET_ID, DEFAULT_ORIENTATION } from "./dimension-presets";
 
 interface EditorContextType {
-  // Current page state
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
+  // Current spread state (0-5)
+  currentSpread: number;
+  setCurrentSpread: (spread: number) => void;
 
   // Uploaded images in the tray
   uploadedImages: Image[];
@@ -33,8 +33,8 @@ interface EditorContextType {
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
 export function EditorProvider({ children }: { children: ReactNode }) {
-  // Current page state
-  const [currentPage, setCurrentPage] = useState(1);
+  // Current spread state (0 = Cover, 1 = Page 1, 2 = Pages 2-3, etc.)
+  const [currentSpread, setCurrentSpread] = useState(0);
 
   // Uploaded images in the tray
   const [uploadedImages, setUploadedImages] = useState<Image[]>([]);
@@ -90,7 +90,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 
   // Reset all state
   const resetState = useCallback(() => {
-    setCurrentPage(1);
+    setCurrentSpread(0);
     setUploadedImages([]);
     setImagesBySlot({});
     setDimensions({
@@ -103,8 +103,8 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   return (
     <EditorContext.Provider
       value={{
-        currentPage,
-        setCurrentPage,
+        currentSpread,
+        setCurrentSpread,
         uploadedImages,
         addUploadedImages,
         imagesBySlot,
