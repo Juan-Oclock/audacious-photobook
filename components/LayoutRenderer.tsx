@@ -29,7 +29,7 @@ export default function LayoutRenderer({
   if (node.slot) {
     return (
       <div
-        className="flex-shrink-0"
+        className="relative flex-shrink-0 min-h-0 min-w-0 overflow-hidden"
         style={{
           flexGrow: node.widthRatio || node.heightRatio || 1,
         }}
@@ -56,7 +56,7 @@ export default function LayoutRenderer({
         {node.rows.map((row, index) => (
           <div
             key={index}
-            className="flex-shrink-0 min-h-0"
+            className="flex-shrink-0 min-h-0 overflow-hidden"
             style={{
               flexGrow: row.heightRatio || 1,
               display: "flex",
@@ -87,7 +87,7 @@ export default function LayoutRenderer({
         {node.columns.map((col, index) => (
           <div
             key={index}
-            className="flex-shrink-0 min-w-0"
+            className="flex-shrink-0 min-w-0 overflow-hidden"
             style={{
               flexGrow: col.widthRatio || 1,
               display: "flex",

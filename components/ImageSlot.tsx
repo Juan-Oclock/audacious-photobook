@@ -62,7 +62,7 @@ export default function ImageSlot({
   return (
     <div
       className={`
-        relative w-full h-full overflow-hidden transition-all duration-200
+        absolute inset-0 overflow-hidden transition-all duration-200
         ${image ? "cursor-grab active:cursor-grabbing" : "cursor-default"}
         ${isDragOver ? "ring-4 ring-teal-400 ring-inset bg-teal-50" : ""}
         ${!image ? "border-2 border-dashed border-slate-300 bg-slate-50" : ""}
